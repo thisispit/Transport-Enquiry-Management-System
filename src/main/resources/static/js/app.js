@@ -256,6 +256,20 @@ function renderStopTimeline(route) {
   `;
 }
 
+function filterLocalRoutes(query = {}) {
+  const source = (query.source || '').trim().toLowerCase();
+  const destination = (query.destination || '').trim().toLowerCase();
+
+  return routeCatalog.filter((route) => {
+    const routeSource = String(route.source || '').toLowerCase();
+    const routeDestination = String(route.destination || '').toLowerCase();
+
+    const sourceMatch = !source || routeSource.includes(source);
+    const destinationMatch = !destination || routeDestination.includes(destination);
+    return sourceMatch && destinationMatch;
+  });
+}
+
 function clearRoutes() {
   routesGrid.innerHTML = '';
 }
@@ -358,11 +372,26 @@ async function loadRoutes(query = '') {
       setStatus(`Showing ${routes.length} route(s)`);
       setMessage('Routes loaded successfully.');
     } else {
-      renderEmptyState('No routes returned by the API', 'You can still use the demo button to preview the interface.');
-      setStatus('No routes returned.');
+      const localRoutes = filterLocalRoutes(query);
+      if (localRoutes.length > 0) {
+        renderRoutes(localRoutes);
+        setStatus(`Showing ${localRoutes.length} local route(s)`);
+        setMessage('Using local route data because the backend returned no results.');
+      } else {
+        renderEmptyState('No routes returned by the API', 'You can still use the demo button to preview the interface.');
+        setStatus('No routes returned.');
+      }
     }
   } catch (error) {
     console.error(error);
+    const localRoutes = filterLocalRoutes(query);
+    if (localRoutes.length > 0) {
+      renderRoutes(localRoutes);
+      setStatus(`Showing ${localRoutes.length} local route(s)`);
+      setMessage('Backend unavailable. Showing local route data instead.');
+      return;
+    }
+
     renderEmptyState('Backend not available', 'The UI is working, but the API did not respond. Use the demo data or start the Spring Boot app.');
     setStatus('Backend not reachable. Showing UI only.');
     setMessage('Failed to load routes from the backend.', 'error');

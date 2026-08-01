@@ -102,6 +102,32 @@ mvn spring-boot:run
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - API docs: http://localhost:8080/api-docs
 
+## Vercel Deployment
+
+This repository can also be deployed as a static frontend on Vercel.
+
+### What Gets Deployed
+- The UI from `src/main/resources/static`
+- Local demo routes and offline route search fallback
+- Hash-based navigation for the route pages
+
+### How It Works
+- Vercel runs `npm run build`
+- The build script copies the static site into `dist`
+- Vercel serves `dist` as the published site
+
+### Deploy Steps
+1. Push the repository to GitHub.
+2. Import the repo into Vercel.
+3. Keep the default build command `npm run build`.
+4. Leave the output directory as `dist`.
+5. Deploy the project.
+
+### Important Note
+- The hosted Vercel version is frontend-only.
+- It uses local route data when the Spring backend is not available.
+- If you want live backend APIs, host the Spring Boot app separately and point the frontend to that API later.
+
 ### Run Tests
 ```powershell
 mvn test
