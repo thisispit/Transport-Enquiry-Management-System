@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEMS | Transport Enquiry Management System</title>
+  <meta name="description" content="Search transport routes, manage bookings, submit feedback — a clean campus-placement backend with a premium frontend." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css?v=20260801" />
+</head>
+<body>
+
+  <!-- ===================== MAIN APP SHELL ===================== -->
+  <div id="appShell" class="app-shell">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon-sm">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="12" fill="url(#brandGrad2)"/>
+            <path d="M12 28V16l8-6 8 6v12H22v-6h-4v6H12z" fill="#fff" opacity="0.9"/>
+            <defs><linearGradient id="brandGrad2" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#ffb347"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient></defs>
+          </svg>
+        </div>
+        <span class="sidebar-title">TEMS</span>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="#home" class="nav-link active" data-page="home">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="#routes" class="nav-link" data-page="routes">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <span>Routes</span>
+        </a>
+        <a href="#bookings" class="nav-link" data-page="bookings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Bookings</span>
+        </a>
+        <a href="#feedback" class="nav-link" data-page="feedback">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>Feedback</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Tools</p>
+        <a href="#api-examples" class="nav-link" data-page="api-examples">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>API Examples</span>
+        </a>
+        <a href="/swagger-ui.html" class="nav-link" target="_blank" rel="noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Swagger UI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge" id="userBadge">
+          <div class="avatar" id="userAvatar">S</div>
+          <div class="user-info">
+            <span class="user-name" id="userName">Guest</span>
+            <span class="user-role" id="userRole">No login required</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="logout-btn" title="Admin sign-in">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MOBILE TOPBAR -->
+    <header class="mobile-topbar" id="mobileTopbar">
+      <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">TEMS</span>
+      <button id="logoutBtnMobile" class="logout-btn" title="Sign out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="mainContent" class="main-content">
+
+      <!-- ===== HOME PAGE ===== -->
+      <section id="page-home" class="page">
+        <div class="page-header">
+          <div>
+            <p class="page-kicker">Route Home</p>
+            <h1 id="welcomeTitle">Discover better journeys 👋</h1>
+            <p class="page-desc">Start with route details, compare travel paths, and treat booking as a quick bonus step.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="homeStats">
+          <article class="stat-card stat-routes">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+            </div>
+            <div>
+              <span class="stat-label">Route options</span>
+              <strong class="stat-value" id="statRoutes">—</strong>
+            </div>
+          </article>
+          <article class="stat-card stat-bookings">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div>
+              <span class="stat-label">Booking add-on</span>
+              <strong class="stat-value" id="statBookings">—</strong>
+            </div>
+          </article>
+          <article class="stat-card stat-feedback">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <div>
+              <span class="stat-label">Journey feedback</span>
+              <strong class="stat-value" id="statFeedback">—</strong>
+            </div>
+          </article>
+          <article class="stat-card stat-active">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <span class="stat-label">Live routes</span>
+              <strong class="stat-value" id="statActive">—</strong>
+            </div>
+          </article>
+        </div>
+
+        <div class="home-grid">
+          <div class="panel quick-start-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Getting started</p>
+                <h2>Route-first guide</h2>
+              </div>
+            </div>
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div>
+                  <h3>Explore routes</h3>
+                  <p>Go to the <a href="#routes">Routes</a> page and compare source, destination, fare, and travel time.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div>
+                  <h3>Read the journey</h3>
+                  <p>Use stops and travel duration to understand how the route moves before booking anything.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div>
+                  <h3>Book as a bonus</h3>
+                  <p>If you like a route, jump to <a href="#bookings">Bookings</a> and reserve a seat quickly.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">4</div>
+                <div>
+                  <h3>Leave feedback</h3>
+                  <p>After your trip, share your experience on the <a href="#feedback">Feedback</a> page.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">5</div>
+                <div>
+                  <h3>Explore the API</h3>
+                  <p>Check <a href="#api-examples">API Examples</a> if you want to test endpoints directly.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel recent-routes-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Preview</p>
+                <h2>Route highlights</h2>
+              </div>
+              <a href="#routes" class="secondary-btn">View all →</a>
+            </div>
+            <div id="recentRoutesList" class="recent-routes-list">
+              <div class="empty-state-sm">
+                <p>Loading route highlights...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ROUTES PAGE ===== -->
+      <section id="page-routes" class="page">
+        <div class="page-header">
+          <div>
+            <p class="page-kicker">Route Search</p>
+            <h1>Find Transport Routes</h1>
+            <p class="page-desc">Search by source and destination, view schedules and fares.</p>
+          </div>
+          <div class="page-actions">
+            <button class="secondary-btn" id="refreshRoutesBtn">Refresh</button>
+            <button class="primary-btn" id="loadDemoRoutesBtn">Load Demo Data</button>
+          </div>
+        </div>
+
+        <div class="panel search-panel">
+          <form id="searchForm" class="search-form">
+            <div class="form-group">
+              <label for="sourceInput">Source city</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="sourceInput" type="text" list="sourceSuggestions" placeholder="e.g. Pune" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="destinationInput">Destination city</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <input id="destinationInput" type="text" list="destinationSuggestions" placeholder="e.g. Mumbai" />
+              </div>
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="primary-btn search-btn" type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Search Routes
+              </button>
+            </div>
+          </form>
+
+          <datalist id="sourceSuggestions"></datalist>
+          <datalist id="destinationSuggestions"></datalist>
+
+          <div class="search-helper-grid">
+            <div class="route-presets-panel">
+              <div class="panel-head compact-head">
+                <div>
+                  <p class="panel-kicker">Suggested searches</p>
+                  <h3>Start with an example</h3>
+                </div>
+              </div>
+              <div class="preset-grid">
+                <button type="button" class="preset-chip" data-route-preset data-source="Pune" data-destination="Mumbai">
+                  <strong>Pune → Mumbai</strong>
+                  <span>Popular intercity route</span>
+                </button>
+                <button type="button" class="preset-chip" data-route-preset data-source="Delhi" data-destination="Noida">
+                  <strong>Delhi → Noida</strong>
+                  <span>Quick metro connection</span>
+                </button>
+                <button type="button" class="preset-chip" data-route-preset data-source="Bangalore" data-destination="Chennai">
+                  <strong>Bangalore → Chennai</strong>
+                  <span>Longer route with stops</span>
+                </button>
+                <button type="button" class="preset-chip" data-route-preset data-source="Hyderabad" data-destination="Bengaluru">
+                  <strong>Hyderabad → Bengaluru</strong>
+                  <span>Good demo for testing</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="route-guide-panel">
+              <div class="panel-head compact-head">
+                <div>
+                  <p class="panel-kicker">Simple path</p>
+                  <h3>How to search</h3>
+                </div>
+              </div>
+              <ol class="route-guide-list">
+                <li>Choose a preset or type the cities yourself.</li>
+                <li>Press search to load matching routes or demo data.</li>
+                <li>Use a route card to move straight into booking.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <p id="statusText">Ready — search or load demo data to begin.</p>
+          <label class="compact-select">
+            Per page
+            <select id="pageSizeSelect">
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="messageBar" class="message-bar" role="status" aria-live="polite"></div>
+
+        <div id="routesGrid" class="cards-grid">
+          <article class="empty-state">
+            <div class="empty-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <h3>No routes loaded yet</h3>
+            <p>Pick a suggested search, click <strong>Load Demo Data</strong>, or search manually to preview routes.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== BOOKINGS PAGE ===== -->
+      <section id="page-bookings" class="page">
+        <div class="page-header">
+          <div>
+            <p class="page-kicker">Booking Management</p>
+            <h1>Your Bookings</h1>
+            <p class="page-desc">Create new bookings, view history, or cancel existing reservations.</p>
+          </div>
+        </div>
+
+        <div class="bookings-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">New Booking</p>
+                <h2>Reserve a Seat</h2>
+              </div>
+            </div>
+            <form id="bookingForm" class="stack-form">
+              <div class="form-group">
+                <label for="bookingUserId">User ID</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input id="bookingUserId" type="number" min="1" placeholder="e.g. 1" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="bookingRouteId">Route ID</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+                  <input id="bookingRouteId" type="number" min="1" placeholder="e.g. 101" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="bookingDate">Travel Date</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <input id="bookingDate" type="date" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="bookingSeats">Number of Seats</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  <input id="bookingSeats" type="number" min="1" value="1" required />
+                </div>
+              </div>
+              <button class="primary-btn" type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Create Booking
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">History</p>
+                <h2>Booking Records</h2>
+              </div>
+              <button class="secondary-btn" id="loadBookingsBtn">Load Bookings</button>
+            </div>
+            <div id="bookingsListContainer" class="records-list">
+              <div class="empty-state-sm">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <p>Create a booking or click <strong>Load Bookings</strong> to view existing ones.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== FEEDBACK PAGE ===== -->
+      <section id="page-feedback" class="page">
+        <div class="page-header">
+          <div>
+            <p class="page-kicker">User Feedback</p>
+            <h1>Share Your Experience</h1>
+            <p class="page-desc">Rate your journey and leave comments to help us improve.</p>
+          </div>
+        </div>
+
+        <div class="bookings-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">New Feedback</p>
+                <h2>Submit a Review</h2>
+              </div>
+            </div>
+            <form id="feedbackForm" class="stack-form">
+              <div class="form-group">
+                <label for="feedbackUserId">User ID</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input id="feedbackUserId" type="number" min="1" placeholder="e.g. 1" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="feedbackRouteId">Route ID <span class="optional-tag">optional</span></label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+                  <input id="feedbackRouteId" type="number" min="1" placeholder="e.g. 101" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="feedbackRating">Rating</label>
+                <div class="star-rating" id="starRating">
+                  <button type="button" class="star" data-value="1">★</button>
+                  <button type="button" class="star" data-value="2">★</button>
+                  <button type="button" class="star" data-value="3">★</button>
+                  <button type="button" class="star" data-value="4">★</button>
+                  <button type="button" class="star active" data-value="5">★</button>
+                </div>
+                <input type="hidden" id="feedbackRating" value="5" />
+              </div>
+              <div class="form-group">
+                <label for="feedbackComments">Comments</label>
+                <textarea id="feedbackComments" rows="4" placeholder="The journey was comfortable and on time..."></textarea>
+              </div>
+              <button class="primary-btn" type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                Submit Feedback
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">History</p>
+                <h2>All Feedback</h2>
+              </div>
+              <button class="secondary-btn" id="loadFeedbackBtn">Load Feedback</button>
+            </div>
+            <div id="feedbackListContainer" class="records-list">
+              <div class="empty-state-sm">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <p>Submit feedback or click <strong>Load Feedback</strong> to see reviews.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== API EXAMPLES PAGE ===== -->
+      <section id="page-api-examples" class="page">
+        <div class="page-header">
+          <div>
+            <p class="page-kicker">Developer Reference</p>
+            <h1>API Route Examples</h1>
+            <p class="page-desc">Every endpoint explained with example requests and responses. Click any example to try it live.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Admin access</p>
+              <h2>Sign in only for protected actions</h2>
+            </div>
+          </div>
+          <p class="subtitle">Normal users can browse routes, bookings, and feedback without logging in. Admin sign-in belongs here, next to the protected API examples, not at startup.</p>
+        </div>
+
+        <div class="api-examples-list">
+          <!-- Routes API -->
+          <div class="panel api-group">
+            <div class="api-group-header">
+              <h2>🗺️ Routes API</h2>
+              <span class="api-base">/routes</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/routes?page=0&size=10</code>
+                <span class="api-desc">Get all routes (paginated)</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns a paginated list of all transport routes.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Example Response</span><button class="copy-btn" data-copy="routes-get">Copy</button></div>
+                  <pre id="routes-get">{
+  "content": [
+    {
+      "id": 101,
+      "routeName": "City Connector",
+      "source": "Pune",
+      "destination": "Mumbai",
+      "fare": 250,
+      "travelDurationMinutes": 180,
+      "availableSeats": 24,
+      "active": true,
+      "stops": [
+        { "stopName": "Hinjewadi", "stopOrder": 1 },
+        { "stopName": "Swargate", "stopOrder": 2 }
+      ]
+    }
+  ],
+  "totalElements": 1,
+  "totalPages": 1
+}</pre>
+                </div>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/routes?page=0&size=5">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/routes/search?source=Pune&destination=Mumbai</code>
+                <span class="api-desc">Search routes by source & destination</span>
+              </div>
+              <div class="api-card-body">
+                <p>Filter routes by matching source and/or destination city.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/routes/search?source=Pune&destination=Mumbai&page=0&size=10">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/routes/{id}</code>
+                <span class="api-desc">Get a specific route by ID</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns full route details including all stops.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/routes/101">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/routes</code>
+                <span class="api-desc">Create a new route</span>
+              </div>
+              <div class="api-card-body">
+                <p>Creates a new transport route. Requires admin access.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="routes-post">Copy</button></div>
+                  <pre id="routes-post">{
+  "routeName": "Express Line",
+  "source": "Delhi",
+  "destination": "Agra",
+  "fare": 350,
+  "travelDurationMinutes": 240,
+  "availableSeats": 30,
+  "active": true,
+  "stops": [
+    { "stopName": "Noida", "stopOrder": 1 },
+    { "stopName": "Mathura", "stopOrder": 2 }
+  ]
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bookings API -->
+          <div class="panel api-group">
+            <div class="api-group-header">
+              <h2>📋 Bookings API</h2>
+              <span class="api-base">/bookings</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/bookings</code>
+                <span class="api-desc">Get all bookings</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns all booking records in the system.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/bookings">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/bookings</code>
+                <span class="api-desc">Create a booking</span>
+              </div>
+              <div class="api-card-body">
+                <p>Books seats on a specific route for a user.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="bookings-post">Copy</button></div>
+                  <pre id="bookings-post">{
+  "userId": 1,
+  "routeId": 101,
+  "travelDate": "2026-09-15",
+  "seatCount": 2
+}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge delete">DELETE</span>
+                <code>/bookings/{id}</code>
+                <span class="api-desc">Cancel a booking</span>
+              </div>
+              <div class="api-card-body">
+                <p>Cancels an existing booking by its ID.</p>
+                <button class="try-btn primary-btn" data-method="DELETE" data-url="/bookings/1">▶ Try it live</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback API -->
+          <div class="panel api-group">
+            <div class="api-group-header">
+              <h2>💬 Feedback API</h2>
+              <span class="api-base">/feedbacks</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/feedbacks</code>
+                <span class="api-desc">Get all feedback</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns all user feedback entries.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/feedbacks">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/feedbacks</code>
+                <span class="api-desc">Submit feedback</span>
+              </div>
+              <div class="api-card-body">
+                <p>Submits a new rating and comment.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="feedbacks-post">Copy</button></div>
+                  <pre id="feedbacks-post">{
+  "userId": 1,
+  "routeId": 101,
+  "rating": 5,
+  "comments": "Excellent service, very punctual!"
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <!-- Users API -->
+          <div class="panel api-group">
+            <div class="api-group-header">
+              <h2>👤 Users API</h2>
+              <span class="api-base">/users</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/users/register</code>
+                <span class="api-desc">Register a new user</span>
+              </div>
+              <div class="api-card-body">
+                <p>Creates a new user account.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="users-register">Copy</button></div>
+                  <pre id="users-register">{
+  "fullName": "John Doe",
+  "email": "john@example.com",
+  "phoneNumber": "9876543210",
+  "password": "securePass123"
+}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/users/login</code>
+                <span class="api-desc">Login / authenticate</span>
+              </div>
+              <div class="api-card-body">
+                <p>Authenticates a user by email and password.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="users-login">Copy</button></div>
+                  <pre id="users-login">{
+  "email": "student@example.com",
+  "password": "password123"
+}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/users/{userId}</code>
+                <span class="api-desc">Get user details</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns user profile information.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/users/1">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/users/{userId}/favourites/{routeId}</code>
+                <span class="api-desc">Add route to favourites</span>
+              </div>
+              <div class="api-card-body">
+                <p>Adds a route to the user's saved favourites list.</p>
+                <button class="try-btn primary-btn" data-method="POST" data-url="/users/1/favourites/101">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/users/{userId}/favourites</code>
+                <span class="api-desc">Get favourite routes</span>
+              </div>
+              <div class="api-card-body">
+                <p>Lists all routes saved as favourites by this user.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/users/1/favourites">▶ Try it live</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin API -->
+          <div class="panel api-group" id="admin-api">
+            <div class="api-group-header">
+              <h2>🔒 Admin API</h2>
+              <span class="api-base">/admin</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/admin/dashboard</code>
+                <span class="api-desc">Dashboard statistics</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns total users, routes, bookings, feedbacks, and booking status counts.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/admin/dashboard">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/admin/bookings?page=0&size=10</code>
+                <span class="api-desc">All bookings (paginated)</span>
+              </div>
+              <div class="api-card-body">
+                <p>Admin-level paginated view of all bookings in the system.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/admin/bookings?page=0&size=10">▶ Try it live</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stops API -->
+          <div class="panel api-group">
+            <div class="api-group-header">
+              <h2>📍 Stops API</h2>
+              <span class="api-base">/routes/{routeId}/stops</span>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge get">GET</span>
+                <code>/routes/{routeId}/stops</code>
+                <span class="api-desc">Get all stops for a route</span>
+              </div>
+              <div class="api-card-body">
+                <p>Returns all intermediate stops on a specific route.</p>
+                <button class="try-btn primary-btn" data-method="GET" data-url="/routes/101/stops">▶ Try it live</button>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge post">POST</span>
+                <code>/routes/{routeId}/stops</code>
+                <span class="api-desc">Add a stop to a route</span>
+              </div>
+              <div class="api-card-body">
+                <p>Adds a new intermediate stop to the route.</p>
+                <div class="code-block">
+                  <div class="code-header"><span>Request Body</span><button class="copy-btn" data-copy="stops-post">Copy</button></div>
+                  <pre id="stops-post">{
+  "stopName": "Lonavala",
+  "stopOrder": 3,
+  "arrivalTime": "10:30",
+  "departureTime": "10:35"
+}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge put">PUT</span>
+                <code>/routes/{routeId}/stops/{stopId}</code>
+                <span class="api-desc">Update a stop</span>
+              </div>
+              <div class="api-card-body">
+                <p>Updates the name, order, or timing of an existing stop.</p>
+              </div>
+            </div>
+
+            <div class="api-card">
+              <div class="api-card-head">
+                <span class="method-badge delete">DELETE</span>
+                <code>/routes/{routeId}/stops/{stopId}</code>
+                <span class="api-desc">Delete a stop</span>
+              </div>
+              <div class="api-card-body">
+                <p>Removes a stop from the route.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live API Response Viewer -->
+        <div class="panel api-response-panel" id="apiResponsePanel" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Live Response</p>
+              <h2 id="apiResponseTitle">GET /routes</h2>
+            </div>
+            <button class="secondary-btn" id="closeApiResponse">Close</button>
+          </div>
+          <div class="api-response-meta" id="apiResponseMeta"></div>
+          <pre class="api-response-body" id="apiResponseBody"></pre>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toastContainer" class="toast-container"></div>
+  </div>
+
+  <!-- ROUTE CARD TEMPLATE -->
+  <template id="routeCardTemplate">
+    <article class="route-card">
+      <div class="route-card-top">
+        <div>
+          <p class="route-id"></p>
+          <h3 class="route-name"></h3>
+        </div>
+        <span class="pill route-status"></span>
+      </div>
+      <p class="route-path"></p>
+      <div class="route-tags"></div>
+      <div class="route-meta">
+        <span class="meta-item"><strong>Fare</strong><em class="route-fare"></em></span>
+        <span class="meta-item"><strong>Seats</strong><em class="route-seats"></em></span>
+        <span class="meta-item"><strong>Duration</strong><em class="route-duration"></em></span>
+      </div>
+      <div class="route-stop-timeline"></div>
+      <div class="route-card-actions">
+        <button class="secondary-btn copy-route-btn" type="button">Copy Route ID</button>
+        <button class="primary-btn use-route-btn" type="button">Use in Booking</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="/js/app.js?v=20260801"></script>
+</body>
+</html>
