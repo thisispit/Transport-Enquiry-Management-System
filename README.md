@@ -162,6 +162,3 @@ mvn test
 
 ## Resume Impact
 This project demonstrates core Java, OOP, REST API design, JPA mappings, validation, exception handling, pagination, sorting, and unit testing in a clean Spring Boot application.
-
-## License
-MIT
